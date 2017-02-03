@@ -126,8 +126,8 @@ def plot_lanes(binary, left_fit, right_fit, left_lane_inds, right_lane_inds):
     out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0]
     out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 0, 255]
     plt.imshow(out_img)
-    plt.plot(left_fitx, ploty, color='yellow')
-    plt.plot(right_fitx, ploty, color='yellow')
+    plt.plot(left_fitx, ploty, color='yellow', linewidth=10)
+    plt.plot(right_fitx, ploty, color='yellow', linewidth=10)
     plt.xlim(0, 1280)
     plt.ylim(720, 0)
     return out_img
