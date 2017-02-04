@@ -13,11 +13,9 @@ class Camera_calibrator:
     def initialize(self, filename='calibration.pkl', corners=(9,6), cal_image_loc='camera_cal/*.jpg'):
         try:
             self.load_calibration_points(filename)
-            print('loaded')
         except:
             _, _ = self.detect_corners(corners=corners, cal_image_loc=cal_image_loc)
             self.save_calibration_points(filename=filename)
-            print('calibrated')
 
     def save_calibration_points(self, filename='calibration.pkl'):
         obj = {"imgpoints": self.imgpoints, "objpoints": self.objpoints}
