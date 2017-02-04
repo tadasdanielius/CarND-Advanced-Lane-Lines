@@ -71,11 +71,21 @@ class LaneDetector:
         #self.right_lane_inds = []
         self.lane_inds = ([], [])
 
+    def make_hist(self, shape=(400, 1280), color=(255,0,0)):
+        """ create histogram image """
+        hist_img = np.zeros((shape[0], shape[1], 3))
+        hist_img = hist_img.astype(np.uint8)
+        for idx, val in enumerate(self.histogram):
+            idx = int(idx)
+            val = int(val)
+            cv2.line(hist_img, (idx,399), (idx, 399-val), color)
+        return hist_img
+
     def __histogram__(self):
         """Build histogram from image. Useful to find peaks where lanes might be"""
         self.histogram = np.sum(self.binary[self.binary.shape[0]/2:, :], axis=0)
         self.midpoint = np.int(self.histogram.shape[0]/2)
-        leftx_base = np.argmax(self.histogram[:self.midpoint])
+        leftx_base = np.argmax(self.histogram[200:self.midpoint])
         rightx_base = np.argmax(self.histogram[self.midpoint:]) + self.midpoint
 
         self.bases = (leftx_base, rightx_base)
@@ -133,7 +143,7 @@ def plt_plot_lanes(binary, left_fit, right_fit, left_lane_inds, right_lane_inds)
     plt.ylim(720, 0)
     return out_img
 
-def plot_lanes(img, left_fit, right_fit, unwarped_shape):
+def plot_lanes(img, left_fit, right_fit, unwarped_shape, fill=True):
     """ plot lanes on image """
     lanes_img = np.zeros_like(img)
     ploty = np.linspace(0, unwarped_shape[0]-1, unwarped_shape[0])
@@ -145,7 +155,9 @@ def plot_lanes(img, left_fit, right_fit, unwarped_shape):
         rightx = int(right_fitx[idx])
         cv2.line(lanes_img, (leftx-10, idx), (leftx+10, idx), (255,255,0))
         cv2.line(lanes_img, (rightx-10, idx), (rightx+10, idx), (255,255,0))
-        cv2.line(lanes_img, (leftx+10, idx), (rightx-10, idx), (0,255,0))
+
+        if fill is True:
+            cv2.line(lanes_img, (leftx+10, idx), (rightx-10, idx), (0,255,0))
 
     return lanes_img
 
