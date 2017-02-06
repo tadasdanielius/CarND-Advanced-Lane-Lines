@@ -4,10 +4,14 @@ import numpy as np
 
 class Edges:
     """The class responsible for detecting edges for a given image"""
-    def __init__(self, img):
+    def __init__(self, img, equalize=True):
         self.img = img
         self.gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        if equalize is True:
+            self.gray = cv2.equalizeHist(self.gray)
         self.hls = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
+        self.luv = cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
+        self.rgb = img
         self.combined = np.zeros_like(self.gray)
 
     def gradient(self, threshold=(20, 100), dix=1, diy=0, combine=True):
@@ -38,19 +42,33 @@ class Edges:
             combine=combine)
         return img
 
-    def gradient_color_channel(self, thresh_min=170, thresh_max=255, channel=2, combine=True):
-        """Gradient with HLS"""
-        img_channel = self.hls[:, :, channel]
+    def gradient_color_channel(self, thresh_min=180, thresh_max=255, channel=2, combine=True, space=None):
+        """Gradient from selected space"""
+        selected_color_space = self.img
+        if space is not None:
+            selected_color_space = cv2.cvtColor(self.img, space)
+        
+        img_channel = selected_color_space if space is cv2.COLOR_RGB2GRAY else selected_color_space[:, :, channel]
         binary = np.zeros_like(img_channel)
         binary[(img_channel >= thresh_min) & (img_channel <= thresh_max)] = 1
 
         self._combine(binary, combine)
         return binary
 
+    def gradient_color_inrange(self, lower, upper, combine=True, space=None):
+        """Gradient from selected space"""
+        selected_color_space = self.img
+        if space is not None:
+            selected_color_space = cv2.cvtColor(self.img, space)
+
+        binary = cv2.inRange(selected_color_space, lower, upper)
+        self._combine(binary, combine)
+        return binary
+
     def _combine(self, binary, combine=True):
         if combine:
             combined = self.combined
-            combined[(combined == 1) | (binary == 1)] = 1
+            combined[(combined != 0) | (binary != 0)] = 1
             self.combined = combined
 
     def laplacian(self, thresh_min=15, thresh_max=255, combine=True):
