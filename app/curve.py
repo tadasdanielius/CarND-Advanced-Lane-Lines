@@ -173,7 +173,8 @@ class Curve:
         # Centers
         self.centers = None
         # For submission use 8
-        self.stabilizer = CurveStabilizer(3)
+        self.stabilizer = CurveStabilizer(10)
+        self.curve_valid_win = None
 
     def adjust_center(self, center):
         """ Center gives approvimate location where to start looking for the curve """
@@ -220,6 +221,7 @@ class Curve:
             #self.base_range = (fitx-250, fitx+250)
             self.center = fitx
             self.initialized = True
+            self.curve_valid_win = win
             return True
         else:
             return False
