@@ -26,7 +26,7 @@ class Camera_calibrator:
         obj = {"imgpoints": self.imgpoints, "objpoints": self.objpoints}
         with open(filename, 'wb') as f:
             pickle.dump(obj, f)
-    
+
     def load_calibration_points(self, filename='calibration.pkl'):
         with open(filename, 'rb') as f:
             obj = pickle.load(f)
@@ -56,7 +56,7 @@ class Camera_calibrator:
             if ret == True:
                 objpoints.append(objp)
                 imgpoints.append(detected_corners)
-    
+
         self.imgpoints = imgpoints
         self.objpoints = objpoints
 
