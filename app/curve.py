@@ -9,7 +9,7 @@ class CurveStabilizer:
         self.frames = frames
 
     def stabilize(self, fit):
-        """ stabilize the coff """
+        """ stabilize the coff by averaging over defined number of frames"""
         if self.count < self.frames:
             self.log[self.count,] = fit
             self.count += 1
@@ -47,8 +47,7 @@ class CurveWindow:
     def draw(self, img, color=(0, 255, 0)):
         """ Draw rectange on the given image """
         y1, x1, y2, x2 = self.boundaries()
-        
-        #print('color {} boundaries {}'.format(color, self.boundaries()))
+
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 4)
         cv2.putText(img,str(self.reason), (x1+15,y1+40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0), 4)
 
@@ -79,7 +78,7 @@ class CurveWindow:
                 self.reason = 1
             else:
                 self.reason = 3
-            
+
             self.valid = False
         return good_inds, self.center, self.valid
 
@@ -225,12 +224,12 @@ class Curve:
             return True
         else:
             return False
-    
+
     def fit_avg(self, shape):
         ploty = np.linspace(0, shape-1, shape)
         fitx = self.fit[0]*ploty**2 + self.fit[1]*ploty + self.fit[2]
         return fitx.mean()
-        
+
 
 def plot_lanes(img, left_fit, right_fit, unwarped_shape):
     """ plot lanes on image """
