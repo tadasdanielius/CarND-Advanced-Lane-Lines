@@ -81,17 +81,6 @@ For curve detection I have implemented 3 classes in the file *app/curve.py*:
 * CurveWindows holds the list of all sliding windows for a given line.
 * Curve which is responsible for creating sliding windows, checking if it meets all requirements and marks either valid or not. Then fits the curve.
 
-### Stabilisation
-Not all road parts are nicely fitted. Some of the areas has different colour and cause problems separating lines, therefore some stabilisation technique is used:
-
-* Slidings windows cannot move too far from the last frame position
-* Sliding windows which has less than 50 pixels or more than 20000 pixels will be ignored and previous frame values will be used
-* If less than 3 sliding windows are found, then ignore the frame and use previous frame line values
-* Fitting cofficients are averaged for 10 frames
-
-In case some rules are invalid (less than 3 windows are valid) then it will roll-back fitted curve from the previous frame.
-Curve stabilisation (smoothing logic) is implemented in file *app/curve.py* class CurveStabiliser
-
 ## Stabilisation
 
 Not all road parts are nicely fitted. Some of the areas has different colour and cause problems separating lines, therefore some stabilisation technique is used: 
